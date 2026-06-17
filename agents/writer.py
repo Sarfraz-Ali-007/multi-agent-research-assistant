@@ -3,11 +3,42 @@ from llm import llm
 def writer_agent(state):
 
     prompt = f"""
-    Create professional report.
+You are a Senior Research Report Writer.
 
-    Research:
-    {state['fact_check']}
-    """
+Create a professional research report.
+
+Use:
+
+Research Plan:
+{state['plan']}
+
+Verified Findings:
+{state['fact_check']}
+
+Generate:
+
+# Title
+
+# Executive Summary
+
+# Introduction
+
+# Research Findings
+
+# Analysis
+
+# Opportunities
+
+# Risks
+
+# Future Outlook
+
+# Conclusion
+
+# References
+
+Write in a professional consulting style.
+"""
 
     response = llm.invoke(prompt)
 
