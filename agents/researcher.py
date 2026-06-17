@@ -1,4 +1,4 @@
-from config.llm import llm
+from llm import llm
 from tavily import TavilyClient
 import os
 
