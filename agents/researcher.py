@@ -1,3 +1,4 @@
+from config.llm import llm
 from tavily import TavilyClient
 import os
 
@@ -7,14 +8,50 @@ client = TavilyClient(
 
 def researcher_agent(state):
 
-    result = client.search(
+    search_results = client.search(
         query=state["query"],
-        max_results=5
+        max_results=10,
+        search_depth="advanced"
     )
 
-    text = ""
+    context = ""
 
-    for r in result["results"]:
-        text += r["content"] + "\n"
+    for r in search_results["results"]:
+        context += f"""
+Title: {r.get('title')}
 
-    return {"research": text}
+URL: {r.get('url')}
+
+Content:
+{r.get('content')}
+
+----------------------------------
+"""
+
+    prompt = f"""
+You are a Senior Research Analyst.
+
+Research Topic:
+{state['query']}
+
+Research Plan:
+{state.get('plan', '')}
+
+Analyze the web results and provide:
+
+## Key Findings
+## Important Statistics
+## Industry Trends
+## Expert Opinions
+## Opportunities
+## Risks
+## Source References
+
+Web Results:
+
+{context}
+"""
+
+    response = llm.invoke(prompt)
+
+    return {"research": response.content}
